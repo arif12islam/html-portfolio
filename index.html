@@ -1,36 +1,259 @@
-<!-- TODO 1: Create the HTML Boilerplate -->
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>জেমিনি বাংলা রেসিপি | আপনার পছন্দের রান্না</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@300;400;500;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans Bengali', sans-serif;
+            background-color: #F8F4E3; /* Warm off-white, reminiscent of traditional homes */
+            color: #3B3C36; /* Dark charcoal for good contrast */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjRkUwRkYyIiBmaWxsLW9wYWNpdHk9IjAuNiIgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMCA0MGMtMS4xNjctNy45MjUgNC0xNS41ODYgMTYtMjMgMTkuMDk1LTEyLjAzNiAyNi45NzQtMTYgNDAtMTAuNjYzIDkuNzMzIDMuNTIzIDcuMTg4IDkuODIzIDYuMDM2IDEyLjMwMy0xLjAxIDEuODk2LS44MjggNC42OTUtMi44ODcgNi4wMTQtLjU2Ny41Ni0xLjczLjkzMi0yLjQxMyAxLjUxNkwzNS4yNSA0MC0yLjQxMi02LjM1Mmw0Mi4zMzMgNjEuMDQzLTMzLjU2Mi01OC42NDQtNDAuMDA0LTExLjc4NnoiLz48L2c+PC9zdmc+'); /* Subtle background pattern */
+        }
+        .container-card {
+            background-color: #FFFFFF; /* Pure white for the main card */
+            border-radius: 1rem; /* More rounded corners */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* Stronger shadow */
+            border: 1px solid #E0E0D7; /* Soft border */
+        }
+        .header-text {
+            font-family: 'Playfair Display', serif;
+            color: #8B4513; /* Warm brown */
+        }
+        .button-primary {
+            background-color: #D35400; /* Deep orange-red, reminiscent of spices */
+            color: #FFFFFF;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .button-primary:hover {
+            background-color: #E67E22; /* Lighter orange on hover */
+        }
+        .input-field {
+            border: 1px solid #D1C4BB; /* Softer border for input */
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            color: #3B3C36;
+        }
+        .recipe-output-card {
+            background-color: #FFF9E6; /* Light yellow-cream for recipe area */
+            border: 1px dashed #D35400; /* Dashed border for visual interest */
+            border-radius: 0.75rem;
+            min-height: 200px;
+        }
+        .section-heading {
+            font-family: 'Playfair Display', serif;
+            color: #8B4513;
+            font-weight: 700;
+        }
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid for steps */
+            gap: 1rem;
+        }
+        .grid-step {
+            background-color: #FFFFFF; /* White background for each step */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow for each step */
+            border: 1px solid #F0E6D7;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .step-number {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            background-color: #D35400;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            border: 2px solid white;
+        }
+        /* Custom styles for loading spinner */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-left-color: #FFFFFF; /* White spinner */
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: none; /* Hidden by default */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container-card p-8 rounded-xl shadow-2xl max-w-4xl w-full mx-auto my-8">
+        <h1 class="text-5xl font-extrabold text-center header-text mb-4">
+            <span class="block">🍽️ বাংলা রেসিপি জেনারেটর 🍜</span>
+        </h1>
+        <p class="text-center text-gray-600 mb-8 text-lg">
+            আপনার পছন্দের খাবারের নাম লিখুন, জেমিনি তৈরি করবে একটি সহজ ও সুস্বাদু রেসিপি!
+        </p>
 
-<!-- TODO 2: Add Your previous projects' HTML into the public folder -->
+        <div class="flex flex-col md:flex-row gap-4 mb-6">
+            <input
+                type="text"
+                id="recipePrompt"
+                placeholder="যেমন: 'গরুর মাংসের কালা ভুনা', 'ইলিশ ভাপার সহজ রেসিপি', 'লাউ চিংড়ি'"
+                class="flex-grow input-field focus:outline-none focus:ring-2 focus:ring-orange-400"
+            >
+            <button
+                id="generateButton"
+                onclick="generateRecipe()"
+                class="px-6 py-3 button-primary shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 transition duration-300 ease-in-out flex items-center justify-center"
+            >
+                রেসিপি তৈরি করুন
+                <div id="loadingSpinner" class="spinner ml-2"></div>
+            </button>
+        </div>
 
-<!-- TODO 3: Take screenshots of your project previews and add the images to the images folder -->
+        <div id="recipeOutput" class="mt-8 recipe-output-card p-6 flex flex-col items-center justify-center text-gray-500 text-center">
+            <p class="text-lg">আপনার তৈরি করা সুস্বাদু রেসিপি এখানে দেখা যাবে!</p>
+        </div>
+    </div>
 
-<!-- TODO 4: Add titles/subtitles etc. -->
+    <script>
+        // জেমিনি API ব্যবহার করে রেসিপি তৈরি করার ফাংশন
+        async function generateRecipe() {
+            const promptInput = document.getElementById('recipePrompt');
+            const recipeOutput = document.getElementById('recipeOutput');
+            const generateButton = document.getElementById('generateButton');
+            const loadingSpinner = document.getElementById('loadingSpinner');
 
-<!-- TODO 5: Add a link to the project pages -->
+            const prompt = promptInput.value.trim();
 
-<!-- TODO 6: Add images to show the project previews
-HINT for TODO 6: You can use the height attribute set to 200 to make the image smaller:
-https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-height -->
+            if (!prompt) {
+                recipeOutput.innerHTML = '<p class="text-red-600">রেসিপি তৈরি করতে অনুগ্রহ করে একটি খাবার বা উপকরণ লিখুন।</p>';
+                return;
+            }
 
-<!-- TODO 7: Add the Contact Me and About Me page links -->
- <!DOCTYPE html>
- <html lan="en">
+            // লোডিং অবস্থা দেখানো
+            generateButton.disabled = true;
+            generateButton.classList.add('opacity-70', 'cursor-not-allowed');
+            loadingSpinner.style.display = 'block';
+            recipeOutput.innerHTML = '<p class="text-orange-600 flex items-center justify-center text-lg"><span class="spinner mr-2"></span> আপনার সুস্বাদু রেসিপি তৈরি হচ্ছে...</p>';
+            recipeOutput.classList.remove('text-gray-500'); // প্রাথমিক প্লেসহোল্ডার টেক্সট কালার সরানো
 
-    <head>
-        <meta charset="UTF-8">
-        <title>Portfolio</title>
-    </head>
+            try {
+                // ব্যবহারকারীর প্রম্পট সহ চ্যাট ইতিহাস সংজ্ঞায়িত করা
+                let chatHistory = [];
+                // API-কে বাংলায় সংক্ষিপ্ত রেসিপি চাইতে বলা
+                chatHistory.push({ role: "user", parts: [{ text: `"${prompt}"-এর জন্য একটি সংক্ষিপ্ত এবং সুস্বাদু রেসিপি তৈরি করুন। আউটপুটটি নিম্নলিখিত JSON ফরম্যাটে দিন: { "recipeName": "string", "ingredients": ["string"], "instructions": ["string"] }। প্রতিটি নির্দেশনার ধাপ খুব সংক্ষিপ্ত এবং সরাসরি হবে।` }] });
 
-    <body>
-        <h1>Yo Yo Portfolio!</h1>
-        <h2>I'm a developer</h2>
-        <hr/>
-        <a href="./public/birthday-invite.html"><h3>Birthday Invite Project</h3></a>
-        <img src="./assets/images/birthday-invite.png" height="300" alt="birthday invite" />
-        <a href="./public/movie-ranking.html"><h3>Movie Ranking Project</h3></a>
-        <img src="./assets/images/movie-ranking.png" height="300" alt="movie ranking" />
-        <a href="./public/contact.html">Contact Me</a>
-        <a href="./public/about.html">About me</a>
-    </body>
-    
- </html>
+                // API অনুরোধের জন্য পে-লোড সংজ্ঞায়িত করা, কাঠামোগত প্রতিক্রিয়া স্কিমা সহ
+                const payload = {
+                    contents: chatHistory,
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "OBJECT",
+                            properties: {
+                                "recipeName": { "type": "STRING" },
+                                "ingredients": {
+                                    "type": "ARRAY",
+                                    "items": { "type": "STRING" }
+                                },
+                                "instructions": {
+                                    "type": "ARRAY",
+                                    "items": { "type": "STRING" }
+                                }
+                            },
+                            "propertyOrdering": ["recipeName", "ingredients", "instructions"]
+                        },
+                        // তাপমাত্রা কমিয়ে সৃজনশীলতা বাড়ানো (বাস্তব ক্ষেত্রে টেম্পারেচার নিয়ে পরীক্ষা করা যেতে পারে)
+                        temperature: 0.7 
+                    }
+                };
+
+                // IMPORTANT: apiKey খালি স্ট্রিং হিসাবে রাখুন। ক্যানভাস রানটাইমে এটি স্বয়ংক্রিয়ভাবে সরবরাহ করবে।
+                const apiKey = "AIzaSyBVVQxYu_0iKhuVOuuRW4rlX8dl8g0ND60";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                // API কল করা
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                // প্রতিক্রিয়ায় বৈধ বিষয়বস্তু আছে কিনা তা পরীক্ষা করা
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+
+                    const jsonText = result.candidates[0].content.parts[0].text;
+                    const recipe = JSON.parse(jsonText);
+
+                    // রেসিপি ফরম্যাট করা এবং প্রদর্শন করা
+                    let formattedRecipe = `
+                        <h2 class="text-4xl font-bold header-text mb-6 text-center">${recipe.recipeName}</h2>
+                        <div class="mb-8 w-full">
+                            <h3 class="text-2xl font-semibold section-heading mb-4 text-left">উপকরণ:</h3>
+                            <ul class="list-disc list-inside text-gray-800 text-lg space-y-2">
+                                ${recipe.ingredients.map(item => `<li>${item}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="w-full">
+                            <h3 class="text-2xl font-semibold section-heading mb-4 text-left">নির্দেশাবলী:</h3>
+                            <div class="recipe-grid">
+                                ${recipe.instructions.map((step, index) => `
+                                    <div class="grid-step">
+                                        <span class="step-number">${index + 1}</span>
+                                        <p class="text-gray-800 text-base mt-4">${step}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    recipeOutput.innerHTML = formattedRecipe;
+                    recipeOutput.classList.remove('text-blue-600'); // লোডিং টেক্সট কালার সরানো
+                    recipeOutput.classList.add('text-left', 'p-6'); // রেসিপি বিষয়বস্তুর জন্য বিন্যাস এবং প্যাডিং সামঞ্জস্য করা
+
+                } else {
+                    recipeOutput.innerHTML = '<p class="text-red-600 text-lg">রেসিপি তৈরি করা যায়নি। অনুগ্রহ করে অন্য একটি প্রম্পট চেষ্টা করুন।</p>';
+                }
+
+            } catch (error) {
+                console.error('রেসিপি তৈরিতে ত্রুটি:', error);
+                recipeOutput.innerHTML = `<p class="text-red-600 text-lg">একটি ত্রুটি ঘটেছে: ${error.message}। অনুগ্রহ করে আবার চেষ্টা করুন।</p>`;
+            } finally {
+                // লোডিং অবস্থা লুকানো
+                generateButton.disabled = false;
+                generateButton.classList.remove('opacity-70', 'cursor-not-allowed');
+                loadingSpinner.style.display = 'none';
+                // যদি প্রাথমিক লোডিং বার্তার পরে কোনো ত্রুটি ঘটে থাকে তবে recipeOutput ডিভটি খালি না রাখা নিশ্চিত করা
+                if (recipeOutput.innerHTML.includes('আপনার সুস্বাদু রেসিপি তৈরি হচ্ছে...')) {
+                     recipeOutput.innerHTML = '<p class="text-gray-500 text-lg">আপনার তৈরি করা সুস্বাদু রেসিপি এখানে দেখা যাবে!</p>';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
